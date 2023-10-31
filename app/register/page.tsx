@@ -5,9 +5,12 @@ import { useForm, Controller } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
-import { signIn } from "next-auth/react"
 
 const FormSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .min(2, "Name must have more than 1 characters"),
   email: z.string().min(1, "Email is required").email("Invalid email"),
   password: z.string().min(8, "Password must have more than 8 characters"),
 })
@@ -19,29 +22,33 @@ const Login = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   })
-
   const onSubmit = async (values: z.infer<typeof FormSchema>, e: any) => {
-    console.log(values)
     try {
-      const signInData = await signIn("credentials", {
-        redirect: false,
-        email: values.email,
-        password: values.password,
+      const response = await fetch("api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        }),
       })
-      console.log("signInData", signInData)
-      if (signInData?.error) {
-        console.log("Sign-in error:", signInData.error)
-        setErrorMessage(signInData?.error || "An error occurred")
+
+      if (response.ok) {
+        router.push("/")
       } else {
-        // router.push("/")
-        console.log("success")
+        const errorData = await response.json() // assuming server responds with json
+        setErrorMessage(errorData.message || "An error occurred")
       }
     } catch (err: any) {
-      console.error(err)
+      console.log("An error occurred:", err)
       setErrorMessage(err.message || "An error occurred")
     }
   }
@@ -50,7 +57,7 @@ const Login = () => {
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
         <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Login now!</h1>
+          <h1 className="text-5xl font-bold">Register now!</h1>
           <p className="py-6">
             Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
@@ -59,6 +66,24 @@ const Login = () => {
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body" onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <Controller
+                name="name"
+                control={form.control}
+                render={({ field }) => (
+                  <input
+                    type="text"
+                    {...field}
+                    placeholder="Your name"
+                    className="input input-bordered"
+                    required
+                  />
+                )}
+              />
+            </div>
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
@@ -95,23 +120,16 @@ const Login = () => {
                 )}
               />
 
+              <label className="label"></label>
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover">
-                  Forgot password?
-                </a>
-              </label>
-              <label className="label">
-                <Link
-                  href="/register"
-                  className="label-text-alt link link-hover"
-                >
-                  You dont have an account?
+                <Link href="/login" className="label-text-alt link link-hover">
+                  Already have an account?
                 </Link>
               </label>
             </div>
             <div className="form-control mt-6">
               <button className="btn btn-primary" type="submit">
-                Login
+                Register
               </button>
             </div>
             {form.formState.errors.password &&

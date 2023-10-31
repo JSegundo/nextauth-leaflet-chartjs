@@ -1,38 +1,67 @@
 import type { NextAuthOptions } from "next-auth"
-import GitHubProvider from "next-auth/providers/github"
+// import GitHubProvider from "next-auth/providers/github"
 import CredentialsProvider from "next-auth/providers/credentials"
+// import prisma from "@/lib/prisma"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import { compare } from "bcrypt"
+import { PrismaClient } from "@prisma/client"
+
+const prisma = new PrismaClient()
 
 export const options: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: "/login",
+  },
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: {
-          label: "Username",
+        email: {
+          label: "email",
           type: "text",
-          placeholder: "your username",
+          placeholder: "your email",
         },
         password: {
-          label: "Password:",
+          label: "password:",
           type: "password",
           placeholder: "your password",
         },
       },
-      async authorize(credentials, req) {
-        //here is where i want to retrieve user data to verify with credentials
-        // https://next-auth.js.org/providers/credentials
-        console.log(credentials, req)
-        const user = { id: "1", name: "segu", password: "examplepass" }
-        if (user) {
-          return user
-        } else {
+
+      async authorize(credentials) {
+        console.log("credentials", credentials)
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        if (!credentials?.email || !credentials?.password) {
           return null
+        }
+
+        const existingUser = await prisma.user.findUnique({
+          where: { email: credentials?.email },
+        })
+
+        if (!existingUser) {
+          return null
+        }
+
+        const isPasswordValid = await compare(
+          credentials.password,
+          existingUser?.password
+        )
+        console.log(isPasswordValid)
+
+        if (!isPasswordValid) {
+          return null
+        }
+        console.log("asd")
+        return {
+          id: `${existingUser.id}`,
+          name: existingUser.name,
+          email: existingUser.email,
         }
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 }
