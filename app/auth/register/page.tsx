@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { register } from "@/actions/register"
 
 const FormSchema = z.object({
   name: z
@@ -15,7 +16,7 @@ const FormSchema = z.object({
   password: z.string().min(8, "Password must have more than 8 characters"),
 })
 
-const Login = () => {
+const Register = () => {
   const router = useRouter()
   const [errorMessage, setErrorMessage] = useState("") // for storing error messages
 
@@ -27,30 +28,9 @@ const Login = () => {
       password: "",
     },
   })
-  const onSubmit = async (values: z.infer<typeof FormSchema>, e: any) => {
-    try {
-      const response = await fetch("api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: values.name,
-          email: values.email,
-          password: values.password,
-        }),
-      })
 
-      if (response.ok) {
-        router.push("/")
-      } else {
-        const errorData = await response.json() // assuming server responds with json
-        setErrorMessage(errorData.message || "An error occurred")
-      }
-    } catch (err: any) {
-      console.log("An error occurred:", err)
-      setErrorMessage(err.message || "An error occurred")
-    }
+  const onSubmit = async (values: z.infer<typeof FormSchema>, e: any) => {
+    await register(values)
   }
 
   return (
@@ -141,4 +121,4 @@ const Login = () => {
     </div>
   )
 }
-export default Login
+export default Register

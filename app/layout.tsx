@@ -1,13 +1,9 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import Head from "next/head"
 import Sidebar from "@/components/Sidebar"
 import Navbar from "@/components/Navbar"
-import { options } from "./api/auth/[...nextauth]/options"
-import { getServerSession } from "next-auth"
-import { redirect } from "next/navigation"
-import AuthProvider from "./context/AuthProvider" // gives access to session data to client side pages
+import { auth } from "@/auth"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -20,11 +16,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession(options)
-
-  // if (!session) {
-  //   redirect("api/auth/signin?callbackUrl=/server")
-  // }
+  const session = await auth()
 
   return (
     <html lang="en">
@@ -32,19 +24,15 @@ export default async function RootLayout({
         className={inter.className + "flex flex-row"}
         style={{ height: "calc(100vh - 90px)", overflowY: "auto" }}
       >
-        <AuthProvider>
-          <Navbar />
-          <Sidebar>{children}</Sidebar>
-        </AuthProvider>
-
-        {/* {session ? (
-          <div>
+        {session ? (
+          <>
             <Navbar />
+
             <Sidebar>{children}</Sidebar>
-          </div>
+          </>
         ) : (
-          <div>{children}</div>
-        )} */}
+          <>{children}</>
+        )}
       </body>
     </html>
   )

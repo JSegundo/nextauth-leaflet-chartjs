@@ -1,11 +1,16 @@
 "use client"
+
 import Link from "next/link"
-import React, { useState } from "react"
+import React, { useState, useTransition } from "react"
 import { useForm, Controller } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
+import { login } from "@/actions/login"
+import { LoginSchema } from "@/schemas"
+import { FormError } from "@/components/ui/FormError"
+import { FormSuccess } from "@/components/ui/FormSuccess"
 
 const FormSchema = z.object({
   email: z.string().min(1, "Email is required").email("Invalid email"),
@@ -13,39 +18,50 @@ const FormSchema = z.object({
 })
 
 const Login = () => {
-  const router = useRouter()
-  const [errorMessage, setErrorMessage] = useState("") // for storing error messages
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider!"
+      : ""
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const [showTwoFactor, setShowTwoFactor] = useState(false)
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
+  const [isPending, startTransition] = useTransition()
+
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>, e: any) => {
-    console.log(values)
-    try {
-      const signInData = await signIn("credentials", {
-        redirect: false,
-        email: values.email,
-        password: values.password,
-      })
-      console.log("signInData", signInData)
-      if (signInData?.error) {
-        console.log("Sign-in error:", signInData.error)
-        setErrorMessage(signInData?.error || "An error occurred")
-      } else {
-        // router.push("/")
-        console.log("success")
-      }
-    } catch (err: any) {
-      console.error(err)
-      setErrorMessage(err.message || "An error occurred")
-    }
-  }
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("")
+    setSuccess("")
 
+    startTransition(() => {
+      login(values)
+        .then((data) => {
+          if (data?.error) {
+            form.reset()
+            setError(data.error)
+          }
+
+          //  if (data?.success) {
+          //    form.reset()
+          //    setSuccess(data.success)
+          //  }
+
+          //  if (data?.twoFactor) {
+          //    setShowTwoFactor(true)
+          //  }
+        })
+        .catch(() => setError("Something went wrong"))
+    })
+  }
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -73,6 +89,7 @@ const Login = () => {
                     placeholder="email"
                     className="input input-bordered"
                     required
+                    disabled={isPending}
                   />
                 )}
               />
@@ -91,9 +108,15 @@ const Login = () => {
                     placeholder="password"
                     className="input input-bordered"
                     required
+                    disabled={isPending}
                   />
                 )}
               />
+
+              <div className="py-4">
+                <FormSuccess message={success} />
+                {error && <FormError message={error} />}
+              </div>
 
               <label className="label">
                 <a href="#" className="label-text-alt link link-hover">
@@ -110,13 +133,16 @@ const Login = () => {
               </label>
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={isPending}
+              >
                 Login
               </button>
             </div>
             {form.formState.errors.password &&
               form.formState.errors.password.message}
-            {errorMessage && <p>{errorMessage}</p>}
           </form>
         </div>
       </div>
