@@ -3,6 +3,9 @@ import Link from "next/link"
 import React from "react"
 import { MdSpaceDashboard } from "react-icons/md"
 import { BiLogOut } from "react-icons/bi"
+import { signOut } from "next-auth/react"
+import { logout } from "@/actions/logout"
+import LogoutButton from "./auth/LogOutButton"
 // import { useRouter } from "next/navigation"
 
 const Sidebar = ({ children }: any) => {
@@ -41,14 +44,11 @@ const Sidebar = ({ children }: any) => {
             </Link>
           </li>
           <li>
-            <a>Sidebar Item 2</a>
+            <Link href={"settings"}>Settings</Link>
           </li>
           <div className="divider"></div>
           <li>
-            <Link href={"/login"}>
-              <BiLogOut />
-              Log out
-            </Link>
+            <LogoutButton />
           </li>
         </ul>
       </div>

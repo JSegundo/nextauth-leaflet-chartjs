@@ -1,13 +1,15 @@
 "use client"
 import Link from "next/link"
-import React, { useState } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { useForm, Controller } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { register } from "@/actions/register"
+import { FormError } from "@/components/ui/FormError"
+import { FormSuccess } from "@/components/ui/FormSuccess"
 
-const FormSchema = z.object({
+const RegisterSchema = z.object({
   name: z
     .string()
     .min(1, "Name is required")
@@ -18,10 +20,13 @@ const FormSchema = z.object({
 
 const Register = () => {
   const router = useRouter()
-  const [errorMessage, setErrorMessage] = useState("") // for storing error messages
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const [error, setError] = useState<string | undefined>("")
+  const [success, setSuccess] = useState<string | undefined>("")
+  const [isPending, startTransition] = useTransition()
+
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -29,9 +34,28 @@ const Register = () => {
     },
   })
 
-  const onSubmit = async (values: z.infer<typeof FormSchema>, e: any) => {
-    await register(values)
+  // const onSubmit = async (values: z.infer<typeof RegisterSchema>, e: any) => {
+  //   await register(values)
+  // }
+
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    setError("")
+    setSuccess("")
+
+    startTransition(() => {
+      register(values).then((data) => {
+        setError(data.error)
+        setSuccess(data.success)
+      })
+    })
   }
+
+  useEffect(() => {
+    console.log(success)
+    if (success) {
+      router.replace("/auth/login")
+    }
+  }, [success])
 
   return (
     <div className="hero min-h-screen bg-base-200">
@@ -100,21 +124,26 @@ const Register = () => {
                 )}
               />
 
-              <label className="label"></label>
               <label className="label">
-                <Link href="/login" className="label-text-alt link link-hover">
+                <Link
+                  href="/auth/login"
+                  className="label-text-alt link link-hover"
+                >
                   Already have an account?
                 </Link>
               </label>
             </div>
             <div className="form-control mt-6">
-              <button className="btn btn-primary" type="submit">
+              <button
+                className="btn btn-primary"
+                type="submit"
+                disabled={isPending}
+              >
                 Register
               </button>
             </div>
-            {form.formState.errors.password &&
-              form.formState.errors.password.message}
-            {errorMessage && <p>{errorMessage}</p>}
+            <FormError message={error} />
+            <FormSuccess message={success} />
           </form>
         </div>
       </div>

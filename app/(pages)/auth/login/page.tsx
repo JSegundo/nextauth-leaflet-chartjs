@@ -5,8 +5,7 @@ import React, { useState, useTransition } from "react"
 import { useForm, Controller } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter, useSearchParams } from "next/navigation"
-import { signIn } from "next-auth/react"
+import { useSearchParams } from "next/navigation"
 import { login } from "@/actions/login"
 import { LoginSchema } from "@/schemas"
 import { FormError } from "@/components/ui/FormError"
@@ -43,7 +42,7 @@ const Login = () => {
     setSuccess("")
 
     startTransition(() => {
-      login(values)
+      login(values, callbackUrl)
         .then((data) => {
           if (data?.error) {
             form.reset()
@@ -125,7 +124,7 @@ const Login = () => {
               </label>
               <label className="label">
                 <Link
-                  href="/register"
+                  href="/auth/register"
                   className="label-text-alt link link-hover"
                 >
                   You dont have an account?
