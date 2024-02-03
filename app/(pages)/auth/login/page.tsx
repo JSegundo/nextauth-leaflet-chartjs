@@ -11,11 +11,6 @@ import { LoginSchema } from "@/schemas"
 import { FormError } from "@/components/ui/FormError"
 import { FormSuccess } from "@/components/ui/FormSuccess"
 
-const FormSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Invalid email"),
-  password: z.string().min(8, "Password must have more than 8 characters"),
-})
-
 const Login = () => {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl")

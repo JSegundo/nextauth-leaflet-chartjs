@@ -34,10 +34,6 @@ const Register = () => {
     },
   })
 
-  // const onSubmit = async (values: z.infer<typeof RegisterSchema>, e: any) => {
-  //   await register(values)
-  // }
-
   const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
     setError("")
     setSuccess("")
@@ -144,6 +140,9 @@ const Register = () => {
             </div>
             <FormError message={error} />
             <FormSuccess message={success} />
+            {form.formState.errors.password && (
+              <FormError message={form.formState.errors.password.message} />
+            )}
           </form>
         </div>
       </div>

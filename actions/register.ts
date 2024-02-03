@@ -12,6 +12,7 @@ import { RegisterSchema } from "@/schemas"
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values)
   if (!validatedFields.success) {
+    console.log("asd")
     return { error: "Invalid fields!" }
   }
 
@@ -34,6 +35,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     })
   } catch (err) {
     console.error(err)
+    return { error: "something went wront" }
   }
 
   //   const verificationToken = await generateVerificationToken(email)
