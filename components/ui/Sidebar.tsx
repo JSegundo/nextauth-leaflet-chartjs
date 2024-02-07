@@ -5,7 +5,7 @@ import { MdSpaceDashboard } from "react-icons/md"
 import { BiLogOut } from "react-icons/bi"
 import { signOut } from "next-auth/react"
 import { logout } from "@/actions/logout"
-import LogoutButton from "./auth/LogOutButton"
+import LogoutButton from "../auth/LogOutButton"
 // import { useRouter } from "next/navigation"
 
 const Sidebar = ({ children }: any) => {
