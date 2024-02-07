@@ -1,64 +1,70 @@
-import { useEffect, useMemo, useState } from "react"
-import Leaflet from "leaflet"
+import { SetStateAction, useEffect, useMemo, useState } from "react"
+import Leaflet, { Icon } from "leaflet"
 import * as ReactLeaflet from "react-leaflet"
 import "leaflet/dist/leaflet.css"
+import { Marker, Popup, TileLayer } from "react-leaflet"
+import { Dispatch } from "react"
+
+interface MyCompProps {
+  position: [number, number]
+  setPosition: Dispatch<SetStateAction<[number, number]>>
+}
+interface MapProps {
+  position: [number, number]
+  setPosition: Dispatch<SetStateAction<[number, number]>>
+  zoom: number
+  center: [number, number]
+}
 
 const { MapContainer } = ReactLeaflet
 
-const Map = ({ children, className, width, height, ...rest }: any) => {
+// const Map = ({ ...rest }) => {
+const Map = ({ position, setPosition, zoom, center }: MapProps) => {
   return (
-    <MapContainer className="w-100 h-full" {...rest}>
-      {children(ReactLeaflet, Leaflet)}
-      <Mycomp />
+    <MapContainer
+      className="w-100 h-full"
+      style={{ borderRadius: "16px" }}
+      zoom={13}
+      center={position}
+      //
+    >
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      />
+      <Marker position={position}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+        </Popup>
+      </Marker>
+
+      {/* {children(ReactLeaflet, Leaflet)} */}
+      {/* {children && children()} */}
+      <Mycomp position={position} setPosition={setPosition} />
     </MapContainer>
   )
 }
 
 export default Map
 
-// const Mycomp = ({ setPosition }: any) => {
-const Mycomp = () => {
-  const [position, setPosition] = useState<any>(null)
+const Mycomp = ({ position, setPosition }: MyCompProps) => {
+  console.log(position)
+  const customIcon = new Icon({
+    iconUrl: "/surf.png",
+    iconSize: [38, 38],
+  })
 
-  //   const mapHandlers = useMemo(
-  //     () => ({
-  //       click(e: any) {
-  //         // center view on the coordinates of the click
-  //         // `this` is the Leaflet map object
-  //         this.setView([e.latlng.lat, e.latlng.lng])
-  //       },
-  //     }),
-  //     []
-  //   )
-  //   map.on('click', function(e){
-  //   var coord = e.latlng;
-  //   var lat = coord.lat;
-  //   var lng = coord.lng;
-  //   console.log("You clicked the map at latitude: " + lat + " and longitude: " + lng);
-  //   });
   const map = ReactLeaflet.useMapEvents({
     click(e) {
-      let coord = e.latlng
-      //   let lat = coord.lat
-      //   let lng = coord.lng
-      //   const location = Leaflet.latLng(lat, lng)
-      setPosition(e.latlng)
-
-      //   const res = map.getBounds()
-      //   const bounds = res.getNorthEast()
-      //   var targetLocation = Leaflet.latLng(bounds.lat, bounds.lng)
-      //   console.log("with bounds", targetLocation)
-      //   map.flyTo(targetLocation)
+      // console.log(e.containerPoint)
+      console.log(e.latlng)
+      const newPosition: [number, number] = [e?.latlng?.lat, e?.latlng?.lng]
+      setPosition(newPosition)
     },
-    // locationfound(e) {
-    //   console.log(e.latlng)
-    //   setPosition(e.latlng)
-    //   //   map.flyTo(e.latlng, map.getZoom())
-    // },
   })
   return position === null ? null : (
-    <ReactLeaflet.Marker position={position}>
-      <ReactLeaflet.Popup>You are here</ReactLeaflet.Popup>
+    <ReactLeaflet.Marker position={position} icon={customIcon}>
+      <ReactLeaflet.Popup>Hi there!</ReactLeaflet.Popup>
     </ReactLeaflet.Marker>
   )
   var marker = Leaflet.marker([50, -0.09]).addTo(map)
