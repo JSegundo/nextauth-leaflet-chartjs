@@ -4,7 +4,7 @@ import React from "react"
 const HeroSection = () => {
   return (
     //   min-h-screen
-    <div className="hero  ">
+    <div className="hero ">
       <div className="hero-content flex-col lg:flex-row-reverse justify-around place-self-start">
         <img
           src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"

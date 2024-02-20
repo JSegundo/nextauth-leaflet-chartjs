@@ -27,13 +27,6 @@ const Dashboard = () => {
       <section className="md:col-span-1 md:order-2 order-2">
         <DashboardInput position={position} />
       </section>
-      <button className="btn btn-secondary">secondary</button>
-      <button className="btn btn-accent">accent</button>
-      <button className="btn btn-neutral">neutral</button>
-      <button className="btn btn-info">info</button>
-      <button className="btn btn-success">success</button>
-      <button className="btn btn-warning">warning</button>
-      <button className="btn btn-error">error</button>
     </section>
   )
 }

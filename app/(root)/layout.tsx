@@ -18,11 +18,13 @@ export default async function RootLayout({
   //   const session = await auth()
 
   return (
-    <>
-      <Navbar />
-      <main className="mx-auto p-4 md:p-10  max-w-screen-xl lg:max-w-[80%]">
-        {children}
-      </main>
-    </>
+    <html lang="en">
+      <body>
+        <Navbar />
+        <main className="mx-auto p-4 md:p-10  max-w-screen-xl lg:max-w-[80%]">
+          {children}
+        </main>
+      </body>
+    </html>
   )
 }

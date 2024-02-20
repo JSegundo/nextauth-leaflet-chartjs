@@ -24,13 +24,11 @@ export default async function DashboardLayout({
         className={inter.className}
         style={{ height: "calc(100vh - 90px)", overflowY: "auto" }}
       >
-        <>
-          <Navbar />
+        <Navbar />
 
-          <Sidebar isAuth={session ? true : false}>
-            <main className="w-100 h-full p-3">{children}</main>
-          </Sidebar>
-        </>
+        <Sidebar isAuth={session ? true : false}>
+          <main className="w-100 h-full p-3">{children}</main>
+        </Sidebar>
         {/* {session ? (
           <>
             <Navbar />
