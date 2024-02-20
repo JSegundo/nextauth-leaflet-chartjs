@@ -1,14 +1,22 @@
 "use client"
 import Link from "next/link"
-import React from "react"
+import React, { ReactNode } from "react"
 import { MdSpaceDashboard } from "react-icons/md"
+import { IoSettings } from "react-icons/io5"
+
 import { BiLogOut } from "react-icons/bi"
 import { signOut } from "next-auth/react"
 import { logout } from "@/actions/logout"
 import LogoutButton from "../auth/LogOutButton"
+import { auth } from "@/auth"
 // import { useRouter } from "next/navigation"
 
-const Sidebar = ({ children }: any) => {
+type SidebarProps = {
+  children: ReactNode
+  isAuth: boolean
+}
+
+const Sidebar = ({ children, isAuth }: SidebarProps) => {
   // const router = useRouter()
 
   return (
@@ -35,7 +43,7 @@ const Sidebar = ({ children }: any) => {
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+        <ul className="menu p-4 w-60 min-h-full bg-base-200 text-base-content">
           {/* Sidebar content here */}
           <li>
             <Link href={"/dashboard"} className="flex items-center ">
@@ -44,12 +52,19 @@ const Sidebar = ({ children }: any) => {
             </Link>
           </li>
           <li>
-            <Link href={"settings"}>Settings</Link>
+            <Link href={"/settings"} className="flex items-center ">
+              <IoSettings />
+              Settings
+            </Link>
           </li>
-          <div className="divider"></div>
-          <li>
-            <LogoutButton />
-          </li>
+          {isAuth && (
+            <>
+              <div className="divider"></div>
+              <li>
+                <LogoutButton />
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </div>
