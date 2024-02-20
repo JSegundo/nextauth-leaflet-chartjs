@@ -1,17 +1,9 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Nextjs 14 - app router
 
-## Getting Started
+Working on this webapp with the goal of learning to work better with MAPS and CHARTS
 
-First, run the development server:
+I'm using [Leaflet](https://leafletjs.com/) for the map display and interaction
+[Chart.js](https://www.chartjs.org/) for showing charts
+[Auth.js](https://github.com/nextauthjs) for authentication
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-
+### live link [here](https://surfdata-app.vercel.app/)
