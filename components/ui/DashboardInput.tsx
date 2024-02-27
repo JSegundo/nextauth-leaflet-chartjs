@@ -13,7 +13,7 @@ const DashboardInput = ({ position }: DashboardInputrops) => {
       <div className="join">
         <input
           type="text"
-          placeholder={JSON.stringify(lat + " " + lng) || "Put it a name!"}
+          placeholder={JSON.stringify(lat + " " + lng) || "Name of this spot!"}
           className="input input-bordered join-item w-full md:w-auto mb-2 md:mr-2"
         />
         <button className="btn btn-primary join-item ">Save spot</button>
