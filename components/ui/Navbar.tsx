@@ -3,13 +3,19 @@ import React from "react"
 
 const Navbar = () => {
   return (
-    <div className="navbar bg-base-300">
-      <div className="flex-none"></div>
+    <div className="flex items-center justify-around navbar bg-base-300  theme-controller">
       <div className="flex-1">
         <Link href={"/"} className="btn btn-ghost normal-case text-xl">
           Surf data app
         </Link>
       </div>
+
+      <input
+        type="text"
+        placeholder={"Search cities"}
+        className="input input-bordered join-item w-full md:w-auto mb-2 md:mr-2"
+      />
+
       <div className="flex-none">
         <button className="btn btn-square btn-ghost">
           <svg

@@ -1,54 +1,90 @@
 import { SetStateAction, useEffect, useMemo, useState } from "react"
-import Leaflet, { Icon } from "leaflet"
+import Leaflet, { Icon, LatLngExpression } from "leaflet"
 import * as ReactLeaflet from "react-leaflet"
 import "leaflet/dist/leaflet.css"
-import { Marker, Popup, TileLayer } from "react-leaflet"
+import { Marker, Popup, TileLayer, useMap } from "react-leaflet"
 import { Dispatch } from "react"
+import GeocoderControl from "./Geocoder.tsx"
+import {
+  LocationInfo,
+  LocationPosition,
+} from "@/app/(pages)/dashboard/page.jsx"
 
 interface MyCompProps {
-  position: [number, number]
-  setPosition: Dispatch<SetStateAction<[number, number]>>
+  locationInfo: LocationInfo
+  setlocationInfo: Dispatch<SetStateAction<LocationInfo>>
 }
 interface MapProps {
-  position: [number, number]
-  setPosition: Dispatch<SetStateAction<[number, number]>>
+  locationInfo: LocationInfo
+  setlocationInfo: Dispatch<SetStateAction<LocationInfo>>
   zoom: number
   center: [number, number]
 }
 
 const { MapContainer } = ReactLeaflet
 
-// const Map = ({ ...rest }) => {
-const Map = ({ position, setPosition, zoom, center }: MapProps) => {
-  return (
-    <MapContainer
-      className="w-100 h-full"
-      style={{ borderRadius: "16px" }}
-      zoom={13}
-      center={position}
-      //
-    >
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-      <Marker position={position}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+const TransformPositionToArrayCenter = ({ lat, lng }: any) => {
+  return [Number(lat), Number(lng)] as LatLngExpression
+}
 
-      {/* {children(ReactLeaflet, Leaflet)} */}
-      {/* {children && children()} */}
-      <Mycomp position={position} setPosition={setPosition} />
-    </MapContainer>
+const Map = ({ locationInfo, setlocationInfo, zoom, center }: MapProps) => {
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lat: number
+    lng: number
+  } | null>(null)
+
+  const handleLocationSelect = (
+    location: { lat: number; lng: number },
+    name: string
+  ) => {
+    setSelectedLocation(location)
+    setlocationInfo({
+      position: { lat: location.lat, lng: location.lng },
+      name: name,
+    })
+  }
+
+  return (
+    <>
+      <MapContainer
+        className="w-100 h-full"
+        style={{ borderRadius: "16px" }}
+        zoom={13}
+        center={TransformPositionToArrayCenter(locationInfo.position)}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+        <GeocoderControl onLocationSelect={handleLocationSelect} />
+
+        <Marker position={locationInfo.position}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+
+        <Mycomp locationInfo={locationInfo} setlocationInfo={setlocationInfo} />
+      </MapContainer>
+      <div className="text-center">
+        {selectedLocation ? (
+          <p>
+            Selected location: {locationInfo.name}
+            {/* Selected location: {selectedName} */}
+            <br />
+            Coordinates: {selectedLocation.lat}, {selectedLocation.lng}
+          </p>
+        ) : (
+          <p>No location selected.</p>
+        )}
+      </div>
+    </>
   )
 }
 
 export default Map
 
-const Mycomp = ({ position, setPosition }: MyCompProps) => {
-  console.log(position)
+const Mycomp = ({ locationInfo, setlocationInfo }: MyCompProps) => {
   const customIcon = new Icon({
     iconUrl: "/surf.png",
     iconSize: [38, 38],
@@ -56,14 +92,18 @@ const Mycomp = ({ position, setPosition }: MyCompProps) => {
 
   const map = ReactLeaflet.useMapEvents({
     click(e) {
-      // console.log(e.containerPoint)
-      console.log(e.latlng)
-      const newPosition: [number, number] = [e?.latlng?.lat, e?.latlng?.lng]
-      setPosition(newPosition)
+      const newPosition: LocationPosition = {
+        lat: e?.latlng?.lat,
+        lng: e?.latlng?.lng,
+      }
+      setlocationInfo({
+        position: newPosition,
+        name: "",
+      })
     },
   })
-  return position === null ? null : (
-    <ReactLeaflet.Marker position={position} icon={customIcon}>
+  return locationInfo === null ? null : (
+    <ReactLeaflet.Marker position={locationInfo.position} icon={customIcon}>
       <ReactLeaflet.Popup>Hi there!</ReactLeaflet.Popup>
     </ReactLeaflet.Marker>
   )
