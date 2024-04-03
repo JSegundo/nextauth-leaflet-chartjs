@@ -1,22 +1,14 @@
-import { SetStateAction, useEffect, useMemo, useState } from "react"
+import { useState } from "react"
 import Leaflet, { Icon, LatLngExpression } from "leaflet"
 import * as ReactLeaflet from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { Marker, Popup, TileLayer, useMap } from "react-leaflet"
 import { Dispatch } from "react"
 import GeocoderControl from "./Geocoder.tsx"
-import {
-  LocationInfo,
-  LocationPosition,
-} from "@/app/(pages)/dashboard/page.jsx"
+import { useLocationSelected } from "@/contexts/locationSelectedContext"
+import { LocationSelectedPosition } from "@/interfaces/locationSelectedInterface.js"
 
-interface MyCompProps {
-  locationInfo: LocationInfo
-  setlocationInfo: Dispatch<SetStateAction<LocationInfo>>
-}
 interface MapProps {
-  locationInfo: LocationInfo
-  setlocationInfo: Dispatch<SetStateAction<LocationInfo>>
   zoom: number
   center: [number, number]
 }
@@ -27,22 +19,8 @@ const TransformPositionToArrayCenter = ({ lat, lng }: any) => {
   return [Number(lat), Number(lng)] as LatLngExpression
 }
 
-const Map = ({ locationInfo, setlocationInfo, zoom, center }: MapProps) => {
-  const [selectedLocation, setSelectedLocation] = useState<{
-    lat: number
-    lng: number
-  } | null>(null)
-
-  const handleLocationSelect = (
-    location: { lat: number; lng: number },
-    name: string
-  ) => {
-    setSelectedLocation(location)
-    setlocationInfo({
-      position: { lat: location.lat, lng: location.lng },
-      name: name,
-    })
-  }
+const Map = ({ zoom, center }: MapProps) => {
+  const { locationInfo, setLocationInfo } = useLocationSelected()
 
   return (
     <>
@@ -56,7 +34,7 @@ const Map = ({ locationInfo, setlocationInfo, zoom, center }: MapProps) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
-        <GeocoderControl onLocationSelect={handleLocationSelect} />
+        <GeocoderControl />
 
         <Marker position={locationInfo.position}>
           <Popup>
@@ -64,15 +42,15 @@ const Map = ({ locationInfo, setlocationInfo, zoom, center }: MapProps) => {
           </Popup>
         </Marker>
 
-        <Mycomp locationInfo={locationInfo} setlocationInfo={setlocationInfo} />
+        <Mycomp />
       </MapContainer>
       <div className="text-center">
-        {selectedLocation ? (
+        {locationInfo ? (
           <p>
             Selected location: {locationInfo.name}
-            {/* Selected location: {selectedName} */}
             <br />
-            Coordinates: {selectedLocation.lat}, {selectedLocation.lng}
+            Coordinates: {locationInfo.position.lat},{" "}
+            {locationInfo.position.lng}
           </p>
         ) : (
           <p>No location selected.</p>
@@ -84,7 +62,9 @@ const Map = ({ locationInfo, setlocationInfo, zoom, center }: MapProps) => {
 
 export default Map
 
-const Mycomp = ({ locationInfo, setlocationInfo }: MyCompProps) => {
+const Mycomp = () => {
+  const { locationInfo, setLocationInfo } = useLocationSelected()
+
   const customIcon = new Icon({
     iconUrl: "/surf.png",
     iconSize: [38, 38],
@@ -92,11 +72,11 @@ const Mycomp = ({ locationInfo, setlocationInfo }: MyCompProps) => {
 
   const map = ReactLeaflet.useMapEvents({
     click(e) {
-      const newPosition: LocationPosition = {
+      const newPosition: LocationSelectedPosition = {
         lat: e?.latlng?.lat,
         lng: e?.latlng?.lng,
       }
-      setlocationInfo({
+      setLocationInfo({
         position: newPosition,
         name: "",
       })

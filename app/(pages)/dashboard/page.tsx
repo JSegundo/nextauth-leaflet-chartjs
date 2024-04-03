@@ -3,27 +3,12 @@ import React, { useState } from "react"
 import Map from "@/components/Map/Map"
 import DashboardInput from "@/components/ui/DashboardInput"
 import DisplaySpotCard from "@/components/ui/Cards/DisplaySpotCard"
-
-const DEFAULT_CENTER: LocationPosition = { lat: 38.907132, lng: -77.036546 } // user location ? fav spot
-
-const initialLocationInfo = {
-  position: DEFAULT_CENTER,
-  name: "",
-}
-
-export type LocationPosition = {
-  lat: number
-  lng: number
-}
-
-export type LocationInfo = {
-  position: LocationPosition
-  name: string
-}
+import { LocationSelectedInfo } from "@/interfaces/locationSelectedInterface"
+import { initialLocationInfo } from "@/lib/constants"
+import { useLocationSelected } from "@/contexts/locationSelectedContext"
 
 const Dashboard = () => {
-  const [locationInfo, setlocationInfo] =
-    useState<LocationInfo>(initialLocationInfo)
+  const { locationInfo, setLocationInfo } = useLocationSelected()
   const [weatherData, setweatherData] = useState<any>()
   // const [weatherData, setweatherData] = useState<SpotWeatherData>()
 
@@ -36,15 +21,25 @@ const Dashboard = () => {
           <Map
             center={locationInfo}
             locationInfo={locationInfo}
-            setlocationInfo={setlocationInfo}
+            setlocationInfo={setLocationInfo}
             zoom={12}
           />
         </article>
         <article className="md:col-span-1 md:order-2 order-2">
-          <DashboardInput
-            locationInfo={locationInfo}
-            setweatherData={setweatherData}
-          />
+          <DashboardInput />
+
+          <div className="card card-side bg-base-100 shadow-xl w-fit">
+            <div className="avatar placeholder p-2  ">
+              <div className="bg-neutral text-neutral-content rounded-full w-8 h-8">
+                <span className="text-xs">UI</span>
+              </div>
+            </div>
+            <div className="card-body p-2 gap-0">
+              <h2 className="text-sm font-medium">{locationInfo.name} </h2>
+              <p>{locationInfo.position.lat - locationInfo.position.lng}</p>
+              {/* <p className="p-0">{icon}</p> */}
+            </div>
+          </div>
         </article>
       </section>
 

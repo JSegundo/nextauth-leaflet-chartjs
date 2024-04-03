@@ -4,6 +4,9 @@ import "../../globals.css"
 import Sidebar from "@/components/ui/Sidebar"
 import Navbar from "@/components/ui/Navbar"
 import { auth } from "@/auth"
+import { initialLocationInfo } from "@/lib/constants"
+import { LocationProvider } from "@/contexts/locationSelectedContext"
+
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -24,22 +27,26 @@ export default async function DashboardLayout({
         className={inter.className}
         style={{ height: "calc(100vh - 90px)", overflowY: "auto" }}
       >
-        <Navbar />
-
-        <Sidebar isAuth={session ? true : false}>
-          <main className="w-100 h-full p-3">{children}</main>
-        </Sidebar>
-        {/* {session ? (
+        <LocationProvider>
           <>
             <Navbar />
 
-            <Sidebar>
+            <Sidebar isAuth={session ? true : false}>
               <main className="w-100 h-full p-3">{children}</main>
             </Sidebar>
+            {/* {session ? (
+            <>
+            <Navbar />
+            
+            <Sidebar>
+            <main className="w-100 h-full p-3">{children}</main>
+            </Sidebar>
+            </>
+            ) : (
+              <>{children}</>
+            )} */}
           </>
-        ) : (
-          <>{children}</>
-        )} */}
+        </LocationProvider>
       </body>
     </html>
   )

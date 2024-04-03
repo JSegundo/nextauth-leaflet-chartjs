@@ -7,7 +7,7 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { login } from "@/actions/login"
-import { LoginSchema } from "@/schemas"
+import { LoginSchema } from "@/lib/schemas"
 import { FormError } from "@/components/ui/FormError"
 import { FormSuccess } from "@/components/ui/FormSuccess"
 

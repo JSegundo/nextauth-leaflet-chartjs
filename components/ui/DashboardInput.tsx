@@ -1,4 +1,4 @@
-import { LocationInfo } from "@/app/(pages)/dashboard/page"
+import { useLocationSelected } from "@/contexts/locationSelectedContext"
 import React, {
   Dispatch,
   SetStateAction,
@@ -7,16 +7,9 @@ import React, {
   useState,
 } from "react"
 
-interface DashboardInputrops {
-  locationInfo: LocationInfo
-  setweatherData: Dispatch<SetStateAction<SpotWeatherData | {}>>
-}
-
-const DashboardInput = ({
-  locationInfo,
-  setweatherData,
-}: DashboardInputrops) => {
-  const { lat, lng } = locationInfo?.position
+const DashboardInput = () => {
+  const { locationInfo } = useLocationSelected()
+  const { lat, lng } = locationInfo.position
 
   const locationHasName = locationInfo.name.length > 1
   const locationShortName = locationHasName
@@ -41,7 +34,7 @@ const DashboardInput = ({
       const data = await res.json()
       // adjuntar el name con la data
       const weatherDataWithLocation = { ...data, location: spotName }
-      setweatherData(weatherDataWithLocation)
+      // setweatherData(weatherDataWithLocation)
       // setweatherData(data)
       console.log(data)
     } catch (err) {

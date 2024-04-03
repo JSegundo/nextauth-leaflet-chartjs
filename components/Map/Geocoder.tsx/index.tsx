@@ -8,13 +8,7 @@ import { useEffect } from "react"
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png"
 import markerIcon from "leaflet/dist/images/marker-icon.png"
 import markerShadow from "leaflet/dist/images/marker-shadow.png"
-
-interface GeocoderControlProps {
-  onLocationSelect: (
-    location: { lat: number; lng: number },
-    name: string
-  ) => void
-}
+import { useLocationSelected } from "@/contexts/locationSelectedContext"
 
 // @ts-ignore
 delete L.Icon.Default.prototype._getIconUrl
@@ -24,7 +18,8 @@ Leaflet.Icon.Default.mergeOptions({
   shadowUrl: markerShadow.src,
 })
 
-const GeocoderControl = ({ onLocationSelect }: GeocoderControlProps) => {
+const GeocoderControl = () => {
+  const { setLocationInfo } = useLocationSelected()
   const map = useMap()
 
   useEffect(() => {
@@ -42,13 +37,14 @@ const GeocoderControl = ({ onLocationSelect }: GeocoderControlProps) => {
     control.on("markgeocode", (e: any) => {
       const { center, name } = e.geocode
       console.log(center, name)
-      onLocationSelect(center, name)
+      // setLocationInfo(center, name)
+      setLocationInfo({ position: center, name })
     })
 
     return () => {
       control.remove()
     }
-  }, [map, onLocationSelect])
+  }, [map, setLocationInfo])
 
   return null
 }
