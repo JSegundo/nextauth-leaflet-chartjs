@@ -1,6 +1,9 @@
-## Nextjs 14 - app router
+## Nextjs 14 - App router
 
-Working on this webapp with the goal of learning MAPS and CHARTS
+Working on this webapp with the goal of learning to;
+- work with MAPS
+- CHARTS, data visualization
+
 
 I'm using [Leaflet](https://leafletjs.com/) for the map display and interaction
 [Chart.js](https://www.chartjs.org/) for showing charts
