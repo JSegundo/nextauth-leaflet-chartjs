@@ -4,7 +4,7 @@ import * as ReactLeaflet from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import { Marker, Popup, TileLayer, useMap } from "react-leaflet"
 import { Dispatch } from "react"
-import GeocoderControl from "./Geocoder.tsx"
+import GeocoderControl from "./Geocoder"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
 import { LocationSelectedPosition } from "@/interfaces/locationSelectedInterface.js"
 
@@ -44,18 +44,6 @@ const Map = ({ zoom, center }: MapProps) => {
 
         <Mycomp />
       </MapContainer>
-      <div className="text-center">
-        {locationInfo ? (
-          <p>
-            Selected location: {locationInfo.name}
-            <br />
-            Coordinates: {locationInfo.position.lat},{" "}
-            {locationInfo.position.lng}
-          </p>
-        ) : (
-          <p>No location selected.</p>
-        )}
-      </div>
     </>
   )
 }
@@ -78,7 +66,7 @@ const Mycomp = () => {
       }
       setLocationInfo({
         position: newPosition,
-        name: "",
+        name: `${newPosition.lat} , ${newPosition.lng}`,
       })
     },
   })

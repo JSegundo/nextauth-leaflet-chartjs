@@ -18,6 +18,9 @@ export default auth((req) => {
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname) // - /
   const isAuthRoute = authRoutes.includes(nextUrl.pathname) // - /auth/login - /auth/register
 
+  return null
+  // probando fetching de data sin user logged in
+
   if (isApiAuthRoute) {
     return null
   }

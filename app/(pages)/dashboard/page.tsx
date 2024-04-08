@@ -1,8 +1,8 @@
 "use client"
 import React, { useState } from "react"
-import Map from "@/components/Map/Map"
-import DashboardInput from "@/components/ui/DashboardInput"
-import DisplaySpotCard from "@/components/ui/Cards/DisplaySpotCard"
+import Map from "@/app/components/Map/Map"
+import DashboardInput from "@/app/components/ui/DashboardInput"
+import DisplaySpotCard from "@/app/components/ui/Cards/DisplaySpotCard"
 import { LocationSelectedInfo } from "@/interfaces/locationSelectedInterface"
 import { initialLocationInfo } from "@/lib/constants"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
@@ -27,7 +27,7 @@ const Dashboard = () => {
         </article>
         <article className="md:col-span-1 md:order-2 order-2">
           <DashboardInput />
-
+          {/* card */}
           <div className="card card-side bg-base-100 shadow-xl w-fit">
             <div className="avatar placeholder p-2  ">
               <div className="bg-neutral text-neutral-content rounded-full w-8 h-8">
@@ -36,10 +36,9 @@ const Dashboard = () => {
             </div>
             <div className="card-body p-2 gap-0">
               <h2 className="text-sm font-medium">{locationInfo.name} </h2>
-              <p>{locationInfo.position.lat - locationInfo.position.lng}</p>
-              {/* <p className="p-0">{icon}</p> */}
             </div>
           </div>
+          {/* card */}
         </article>
       </section>
 
@@ -47,7 +46,7 @@ const Dashboard = () => {
       <section className="">
         {weatherData && (
           <DisplaySpotCard
-            name={weatherData?.location}
+            name={locationInfo?.name}
             icon={weatherData?.currentConditions?.icon}
           />
         )}
