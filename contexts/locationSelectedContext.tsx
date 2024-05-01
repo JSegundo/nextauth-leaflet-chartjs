@@ -2,7 +2,7 @@
 import {
   LocationSelectedInfo,
   LocationSelectedPosition,
-} from "@/interfaces/locationSelectedInterface"
+} from "@/types/locationSelectedInterface"
 import { initialLocationInfo } from "@/lib/constants"
 import React, { createContext, useContext, useState } from "react"
 

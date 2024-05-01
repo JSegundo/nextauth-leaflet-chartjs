@@ -6,7 +6,7 @@ import { Marker, Popup, TileLayer, useMap } from "react-leaflet"
 import { Dispatch } from "react"
 import GeocoderControl from "./Geocoder"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
-import { LocationSelectedPosition } from "@/interfaces/locationSelectedInterface.js"
+import { LocationSelectedPosition } from "@/types/locationSelectedInterface.js"
 
 interface MapProps {
   zoom: number

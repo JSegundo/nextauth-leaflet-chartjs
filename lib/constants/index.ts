@@ -1,4 +1,4 @@
-import { LocationPosition } from "@/interfaces/locationSelectedInterface"
+import { LocationPosition } from "@/types/locationSelectedInterface"
 
 export const DEFAULT_CENTER: LocationPosition = {
   lat: 38.907132,

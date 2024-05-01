@@ -1,15 +1,16 @@
 "use client"
 import React, { useState } from "react"
-import Map from "@/app/components/Map/Map"
-import DashboardInput from "@/app/components/ui/DashboardInput"
-import DisplaySpotCard from "@/app/components/ui/Cards/DisplaySpotCard"
-import { LocationSelectedInfo } from "@/interfaces/locationSelectedInterface"
+import Map from "@/components/Map/Map"
+import DashboardInput from "@/components/ui/DashboardInput"
+import DisplaySpotCard from "@/components/ui/Cards/DisplaySpotCard"
+import { LocationSelectedInfo } from "@/types/locationSelectedInterface"
 import { initialLocationInfo } from "@/lib/constants"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
+import DashboardChartsSection from "@/components/charts/DashboardChartsSection"
 
 const Dashboard = () => {
   const { locationInfo, setLocationInfo } = useLocationSelected()
-  const [weatherData, setweatherData] = useState<any>()
+  const [showweatherData, setshowweatherData] = useState<any>()
   // const [weatherData, setweatherData] = useState<SpotWeatherData>()
 
   console.log("position desde dashboard", locationInfo)
@@ -26,33 +27,28 @@ const Dashboard = () => {
           />
         </article>
         <article className="md:col-span-1 md:order-2 order-2">
-          <DashboardInput />
-          {/* card */}
-          <div className="card card-side bg-base-100 shadow-xl w-fit">
-            <div className="avatar placeholder p-2  ">
-              <div className="bg-neutral text-neutral-content rounded-full w-8 h-8">
-                <span className="text-xs">UI</span>
-              </div>
-            </div>
-            <div className="card-body p-2 gap-0">
-              <h2 className="text-sm font-medium">{locationInfo.name} </h2>
-            </div>
-          </div>
-          {/* card */}
+          <DashboardInput
+            showweatherData={showweatherData}
+            setshowweatherData={setshowweatherData}
+          />
         </article>
       </section>
 
       {/* show card selected spot */}
-      <section className="">
-        {weatherData && (
-          <DisplaySpotCard
-            name={locationInfo?.name}
-            icon={weatherData?.currentConditions?.icon}
-          />
-        )}
-      </section>
+      {showweatherData && (
+        <DisplaySpotCard
+          name={locationInfo?.name}
+          // icon={weatherData?.currentConditions?.icon}
+          icon={"icon"}
+        />
+      )}
       {/* show graphs */}
-      <section></section>
+
+      {showweatherData && (
+        <section>
+          <DashboardChartsSection locationInfo={locationInfo} />
+        </section>
+      )}
     </div>
   )
 }

@@ -7,7 +7,12 @@ import React, {
   useState,
 } from "react"
 
-const DashboardInput = () => {
+interface Props {
+  showweatherData: boolean
+  setshowweatherData: Dispatch<SetStateAction<boolean>>
+}
+
+const DashboardInput = ({ showweatherData, setshowweatherData }: Props) => {
   const { locationInfo } = useLocationSelected()
   const { lat, lng } = locationInfo.position
 
@@ -15,12 +20,14 @@ const DashboardInput = () => {
 
   useEffect(() => {
     setspotName("")
+    setspotName(locationInfo.name)
   }, [locationInfo])
 
   const handleButtonClick = async () => {
-    const data = await fetch(
-      `/api/weather?` + new URLSearchParams({ location: `${lat},${lng}` })
-    )
+    setshowweatherData(true)
+    // const data = await fetch(
+    //   `/api/weather?` + new URLSearchParams({ location: `${lat},${lng}` })
+    // )
     //  setWeatherData(data ) from context
     // try {
     //   const res = await fetch(
@@ -47,7 +54,7 @@ const DashboardInput = () => {
           value={spotName}
         />
         <button
-          disabled={!spotName}
+          disabled={!spotName || showweatherData}
           className="btn btn-primary join-item "
           onClick={handleButtonClick}
         >

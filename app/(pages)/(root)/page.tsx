@@ -1,4 +1,4 @@
-import HeroSection from "@/app/components/root/HeroSection"
+import HeroSection from "@/components/root/HeroSection"
 import Image from "next/image"
 import Link from "next/link"
 

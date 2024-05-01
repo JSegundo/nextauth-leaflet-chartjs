@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const data = await res.json()
     console.log("data", data)
 
-    return Response.json({ data })
+    return Response.json(data)
   } catch (err) {
     throw new Error("Error while fetchin data from weather api")
   }
