@@ -6,8 +6,8 @@ import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
 import { register } from "@/actions/register"
-import { FormError } from "@/app/components/ui/FormError"
-import { FormSuccess } from "@/app/components/ui/FormSuccess"
+import { FormError } from "@/components/ui/FormError"
+import { FormSuccess } from "@/components/ui/FormSuccess"
 
 const RegisterSchema = z.object({
   name: z
