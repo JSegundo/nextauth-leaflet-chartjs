@@ -36,6 +36,7 @@ const GeocoderControl = () => {
 
     control.on("markgeocode", (e: any) => {
       const { center, name } = e.geocode
+      console.log("center, name")
       console.log(center, name)
       // setLocationInfo(center, name)
       setLocationInfo({ position: center, name })

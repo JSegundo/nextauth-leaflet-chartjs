@@ -7,6 +7,10 @@ import { Dispatch } from "react"
 import GeocoderControl from "./Geocoder"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
 import { LocationSelectedPosition } from "@/types/locationSelectedInterface.js"
+import {
+  getNameByLatLng,
+  getNameByLatLngProps,
+} from "@/lib/utils/getNameByLatLng"
 
 interface MapProps {
   zoom: number
@@ -31,8 +35,12 @@ const Map = ({ zoom, center }: MapProps) => {
         center={TransformPositionToArrayCenter(locationInfo.position)}
       >
         <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          // sin nombes capaz mejor calidad url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          url="https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.jpg"
+          // attribution="Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
+
+          // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          // attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         />
         <GeocoderControl />
 
@@ -53,21 +61,26 @@ export default Map
 const Mycomp = () => {
   const { locationInfo, setLocationInfo } = useLocationSelected()
 
-  // const customIcon = new Icon({
-  //   iconUrl: "/surf.png",
-  //   iconSize: [38, 38],
-  // })
+  const handleOnMapClick = async (e: any) => {
+    const newPosition: LocationSelectedPosition = {
+      lat: e?.latlng?.lat,
+      lng: e?.latlng?.lng,
+    }
 
-  const map = ReactLeaflet.useMapEvents({
+    const name = await getNameByLatLng({
+      lat: `${newPosition.lat}`,
+      lng: `${newPosition.lng}`,
+    })
+
+    setLocationInfo({
+      position: newPosition,
+      name: `${name}`,
+    })
+  }
+
+  ReactLeaflet.useMapEvents({
     click(e) {
-      const newPosition: LocationSelectedPosition = {
-        lat: e?.latlng?.lat,
-        lng: e?.latlng?.lng,
-      }
-      setLocationInfo({
-        position: newPosition,
-        name: `${newPosition.lat} , ${newPosition.lng}`,
-      })
+      handleOnMapClick(e)
     },
   })
 
@@ -83,9 +96,7 @@ const Mycomp = () => {
       position={locationInfo.position}
       // icon={customIcon}
     >
-      <ReactLeaflet.Popup>Hi there!</ReactLeaflet.Popup>
+      <ReactLeaflet.Popup>{locationInfo.name}</ReactLeaflet.Popup>
     </ReactLeaflet.Marker>
   )
-  var marker = Leaflet.marker([50, -0.09]).addTo(map)
-  return <></>
 }

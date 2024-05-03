@@ -30,17 +30,18 @@ const Dashboard = () => {
             showweatherData={showweatherData}
             setshowweatherData={setshowweatherData}
           />
+
+          {/* show card selected spot */}
+          {showweatherData && (
+            <DisplaySpotCard
+              name={locationInfo?.name}
+              // icon={weatherData?.currentConditions?.icon}
+              icon={"icon"}
+            />
+          )}
         </article>
       </section>
 
-      {/* show card selected spot */}
-      {/* {showweatherData && (
-        <DisplaySpotCard
-          name={locationInfo?.name}
-          // icon={weatherData?.currentConditions?.icon}
-          icon={"icon"}
-        />
-      )} */}
       {/* show graphs */}
 
       {showweatherData && (

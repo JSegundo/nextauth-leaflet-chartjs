@@ -9,7 +9,6 @@ export async function GET(request: Request) {
       `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${location}?unitGroup=metric&key=${API_KEY}&contentType=json`
     )
     const data = await res.json()
-    console.log("data", data)
 
     return Response.json(data)
   } catch (err) {
