@@ -11,7 +11,6 @@ import DashboardChartsSection from "@/components/charts/DashboardChartsSection"
 const Dashboard = () => {
   const { locationInfo, setLocationInfo } = useLocationSelected()
   const [showweatherData, setshowweatherData] = useState<any>()
-  // const [weatherData, setweatherData] = useState<SpotWeatherData>()
 
   console.log("position desde dashboard", locationInfo)
   //get user location and pass it as center
@@ -35,13 +34,13 @@ const Dashboard = () => {
       </section>
 
       {/* show card selected spot */}
-      {showweatherData && (
+      {/* {showweatherData && (
         <DisplaySpotCard
           name={locationInfo?.name}
           // icon={weatherData?.currentConditions?.icon}
           icon={"icon"}
         />
-      )}
+      )} */}
       {/* show graphs */}
 
       {showweatherData && (

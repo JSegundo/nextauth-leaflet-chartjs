@@ -53,10 +53,10 @@ export default Map
 const Mycomp = () => {
   const { locationInfo, setLocationInfo } = useLocationSelected()
 
-  const customIcon = new Icon({
-    iconUrl: "/surf.png",
-    iconSize: [38, 38],
-  })
+  // const customIcon = new Icon({
+  //   iconUrl: "/surf.png",
+  //   iconSize: [38, 38],
+  // })
 
   const map = ReactLeaflet.useMapEvents({
     click(e) {
@@ -70,8 +70,19 @@ const Mycomp = () => {
       })
     },
   })
+
+  // Leaflet.marker(locationInfo.position)
+  //   .addTo(map)
+  //   .bindPopup(
+  //     "<h1 className='text-xl'>asd</h1>A pretty CSS popup.<br> Easily customizable."
+  //   )
+  //   .openPopup()
+
   return locationInfo === null ? null : (
-    <ReactLeaflet.Marker position={locationInfo.position} icon={customIcon}>
+    <ReactLeaflet.Marker
+      position={locationInfo.position}
+      // icon={customIcon}
+    >
       <ReactLeaflet.Popup>Hi there!</ReactLeaflet.Popup>
     </ReactLeaflet.Marker>
   )

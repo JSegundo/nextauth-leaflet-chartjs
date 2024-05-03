@@ -1,11 +1,5 @@
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
-import React, {
-  Dispatch,
-  SetStateAction,
-  createRef,
-  useEffect,
-  useState,
-} from "react"
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react"
 
 interface Props {
   showweatherData: boolean
@@ -14,37 +8,22 @@ interface Props {
 
 const DashboardInput = ({ showweatherData, setshowweatherData }: Props) => {
   const { locationInfo } = useLocationSelected()
-  const { lat, lng } = locationInfo.position
+  // const { lat, lng } = locationInfo.position
 
   const [spotName, setspotName] = useState("")
 
   useEffect(() => {
     setspotName("")
     setspotName(locationInfo.name)
+    // setshowweatherData(false)
   }, [locationInfo])
 
   const handleButtonClick = async () => {
     setshowweatherData(true)
-    // const data = await fetch(
-    //   `/api/weather?` + new URLSearchParams({ location: `${lat},${lng}` })
-    // )
-    //  setWeatherData(data ) from context
-    // try {
-    //   const res = await fetch(
-    //     `/api/weather?` + new URLSearchParams({ location: `${lat},${lng}` })
-    // )
-    //   console.log(res)
-    //   // const weatherDataWithLocation = { ...data, location: spotName }
-    //   // setweatherData(weatherDataWithLocation)
-    // } catch (err) {
-    //   console.error(err)
-    // }
   }
 
   return (
     <div>
-      <h2 className="text-3xl font-medium pb-2">Save and visualize data!</h2>
-
       <div className="join">
         <input
           type="text"
@@ -58,7 +37,7 @@ const DashboardInput = ({ showweatherData, setshowweatherData }: Props) => {
           className="btn btn-primary join-item "
           onClick={handleButtonClick}
         >
-          Save spot
+          View data
         </button>
       </div>
     </div>
