@@ -60,7 +60,6 @@ export default Map
 
 const Mycomp = () => {
   const { locationInfo, setLocationInfo } = useLocationSelected()
-
   const handleOnMapClick = async (e: any) => {
     const newPosition: LocationSelectedPosition = {
       lat: e?.latlng?.lat,

@@ -4,11 +4,13 @@ export type getNameByLatLngProps = {
 }
 
 export async function getNameByLatLng({ lat, lng }: getNameByLatLngProps) {
+  console.log("lat:", lat)
   try {
     const res = await fetch(
       `/api/reverseGeocode?` +
-        new URLSearchParams({ location: `${lat},${lng}` })
+        new URLSearchParams({ location: `${lng},${lat}` })
     )
+
     return res.json()
   } catch (err) {
     console.error(err)
