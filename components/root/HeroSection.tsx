@@ -1,17 +1,18 @@
 import Link from "next/link"
 import React from "react"
+import WindowMockupMap from "./WindowMockupMap"
 
 const HeroSection = () => {
   return (
     //   min-h-screen
-    <div className="hero ">
-      <div className="hero-content flex-col lg:flex-row-reverse justify-around place-self-start">
-        <img
-          src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
-          className="max-w-sm rounded-lg shadow-2xl"
-        />
+    <div className="hero relative">
+      <div className=" hero-content flex-col  md:flex-row justify-around place-self-start">
         <div>
-          <h1 className="text-5xl font-bold"> Stay Ahead of the Weather</h1>
+          <h1 className="text-6xl font-bold">
+            {" "}
+            Monitor weather <br />
+            on real-time dashboard
+          </h1>
           <p className="py-6">
             Enter your location to get accurate weather forecasts and stay
             informed about changing conditions.
@@ -21,6 +22,7 @@ const HeroSection = () => {
           </Link>
         </div>
       </div>
+      <WindowMockupMap />
     </div>
   )
 }

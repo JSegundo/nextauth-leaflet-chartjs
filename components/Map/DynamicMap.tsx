@@ -7,10 +7,7 @@ import { Dispatch } from "react"
 import GeocoderControl from "./Geocoder"
 import { useLocationSelected } from "@/contexts/locationSelectedContext"
 import { LocationSelectedPosition } from "@/types/locationSelectedInterface.js"
-import {
-  getNameByLatLng,
-  getNameByLatLngProps,
-} from "@/lib/utils/getNameByLatLng"
+import { getNameByLatLng } from "@/lib/utils/getNameByLatLng"
 
 interface MapProps {
   zoom: number

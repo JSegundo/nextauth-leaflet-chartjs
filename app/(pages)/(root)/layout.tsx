@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "../../globals.css"
 import Navbar from "@/components/ui/Navbar"
+import Footer from "@/components/root/Footer"
 // import { auth } from "@/auth"
 const inter = Inter({ subsets: ["latin"] })
 
@@ -21,9 +22,10 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
-        <main className="mx-auto p-4 md:p-10  max-w-screen-xl lg:max-w-[80%]">
+        <main className=" mx-auto p-4 md:p-10  max-w-screen-xl lg:max-w-[80%]">
           {children}
         </main>
+        <Footer />
       </body>
     </html>
   )
