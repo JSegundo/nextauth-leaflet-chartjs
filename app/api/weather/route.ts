@@ -1,4 +1,4 @@
-const API_KEY = process.env.NEXT_PUBLIC_VISSUAL_CROSSING_API_KEY
+const API_KEY = process.env.VISSUAL_CROSSING_API_KEY
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
